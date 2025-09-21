@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmotionTunes - Music for Your Mood</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+        
+        .emotion-input {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            background: #1DB954;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #1ed760;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .login-btn {
+            background: #1DB954;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+        }
+        
+        .music-player {
+            text-align: center;
+        }
+        
+        .track-info {
+            margin-bottom: 20px;
+        }
+        
+        .track-name {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .artist-name {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .album-art {
+            width: 250px;
+            height: 250px;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .album-art img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            background: #1DB954;
+        }
+        
+        .play-btn:hover {
+            background: #1ed760;
+        }
+        
+        .user-info {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        
+        .user-type {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        .premium {
+            background: #f1c40f;
+            color: #2c3e50;
+        }
+        
+        .free {
+            background: #3498db;
+        }
+        
+        .emotion-examples {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        footer {
+            margin-top: auto;
+            text-align: center;
+            padding: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .album-art {
+                width: 200px;
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EmotionTunes</h1>
+            <p class="tagline">Discover music that matches your current emotion</p>
+        </header>
+        
+        <div class="card emotion-input">
+            <h2>How are you feeling today?</h2>
+            <div class="input-group">
+                <input type="text" id="emotion-input" placeholder="Enter your emotion (e.g., happy, sad, excited, calm)">
+                <button id="find-music">Find Music</button>
+            </div>
+            <p class="emotion-examples">Try: happy, sad, energetic, relaxed, angry, nostalgic, romantic, focused</p>
+        </div>
+        
+        <div class="login-section">
+            <button id="login-btn" class="login-btn"><i class="fab fa-spotify"></i> Login with Spotify</button>
+            <div id="user-info" class="user-info" style="display: none;">
+                <p>Logged in as <span id="username">User</span></p>
+                <p class="user-type free" id="user-type">Free Account</p>
+            </div>
+        </div>
+        
+        <div class="card music-player" id="music-player" style="display: none;">
+            <h2>Your Emotion Music</h2>
+            <div class="track-info">
+                <p class="track-name" id="track-name">Track Name</p>
+                <p class="artist-name" id="artist-name">Artist Name</p>
+            </div>
+            <div class="album-art">
+                <img id="album-image" src="https://placehold.co/300x300/1db954/white?text=Album+Art" alt="Album Art">
+            </div>
+            <div class="player-controls">
+                <div class="control-btn" id="prev-btn">
+                    <i class="fas fa-step-backward fa-lg"></i>
+                </div>
+                <div class="control-btn play-btn" id="play-btn">
+                    <i class="fas fa-play fa-lg"></i>
+                </div>
+                <div class="control-btn" id="next-btn">
+                    <i class="fas fa-step-forward fa-lg"></i>
+                </div>
+            </div>
+            <p id="player-status" style="margin-top: 20px;">Login to play music</p>
+        </div>
+    </div>
+    
+    <footer>
+        <p>EmotionTunes &copy; 2023 | Connect with Spotify to play music based on your emotions</p>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const emotionInput = document.getElementById('emotion-input');
+        const findMusicBtn = document.getElementById('find-music');
+        const loginBtn = document.getElementById('login-btn');
+        const userInfo = document.getElementById('user-info');
+        const username = document.getElementById('username');
+        const userType = document.getElementById('user-type');
+        const musicPlayer = document.getElementById('music-player');
+        const trackName = document.getElementById('track-name');
+        const artistName = document.getElementById('artist-name');
+        const albumImage = document.getElementById('album-image');
+        const playBtn = document.getElementById('play-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const playerStatus = document.getElementById('player-status');
+        
+        // Emotion to genre mapping
+        const emotionToGenre = {
+            'happy': 'pop',
+            'sad': 'blues',
+            'energetic': 'electronic',
+            'relaxed': 'ambient',
+            'angry': 'rock',
+            'nostalgic': 'classical',
+            'romantic': 'r-n-b',
+            'focused': 'jazz'
+        };
+        
+        // App state
+        let isLoggedIn = false;
+        let isPremium = false;
+        let currentTrack = null;
+        let isPlaying = false;
+        
+        // Event Listeners
+        findMusicBtn.addEventListener('click', findMusic);
+        loginBtn.addEventListener('click', toggleLogin);
+        playBtn.addEventListener('click', togglePlay);
+        prevBtn.addEventListener('click', playPrevious);
+        nextBtn.addEventListener('click', playNext);
+        
+        // Check for access token on page load
+        window.addEventListener('load', function() {
+            checkForAccessToken();
+        });
+        
+        // Function to find music based on emotion
+        async function findMusic() {
+            const emotion = emotionInput.value.trim().toLowerCase();
+            
+            if (!emotion) {
+                alert('Please enter an emotion');
+                return;
+            }
+            
+            if (!isLoggedIn) {
+                alert('Please login with Spotify first');
+                return;
+            }
+            
+            // TODO: Replace with actual Spotify API call
+            // For now, using sample data for demonstration
+            const genre = emotionToGenre[emotion] || 'pop';
+            
+            // Sample track data for demonstration
+            const sampleTracks = {
+                'happy': {
+                    name: 'Happy Pop Hits',
+                    artist: 'Various Artists',
+                    image: 'https://placehold.co/300x300/1db954/white?text=Happy+Music'
+                },
+                'sad': {
+                    name: 'Blues for Blue Days',
+                    artist: 'Soulful Singers',
+                    image: 'https://placehold.co/300x300/3498db/white?text=Sad+Music'
+                },
+                'energetic': {
+                    name: 'Energy Boost',
+                    artist: 'EDM Producers',
+                    image: 'https://placehold.co/300x300/e74c3c/white?text=Energetic+Music'
+                },
+                'relaxed': {
+                    name: 'Calm Moments',
+                    artist: 'Ambient Artists',
+                    image: 'https://placehold.co/300x300/2ecc71/white?text=Relaxing+Music'
+                }
+            };
+            
+            currentTrack = sampleTracks[emotion] || sampleTracks['happy'];
+            
+            // Update UI with track info
+            trackName.textContent = currentTrack.name;
+            artistName.textContent = currentTrack.artist;
+            albumImage.src = currentTrack.image;
+            
+            // Show music player if hidden
+            musicPlayer.style.display = 'block';
+            
+            // Update player status based on user type
+            if (isPremium) {
+                playerStatus.textContent = 'Full track available - Premium user';
+            } else {
+                playerStatus.textContent = 'Playing preview - Free user';
+            }
+            
+            /* 
+            // TODO: Replace with actual Spotify API implementation
+            try {
+                // Get access token from storage
+                const accessToken = localStorage.getItem('spotify_access_token');
+                
+                // Search for tracks by genre
+                const response = await fetch(`https://api.spotify.com/v1/search?q=genre:${genre}&type=track&limit=50`, {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.tracks && data.tracks.items.length > 0) {
+                    // Select a random track
+                    const randomIndex = Math.floor(Math.random() * data.tracks.items.length);
+                    currentTrack = data.tracks.items[randomIndex];
+                    
+                    // Update UI with track info
+                    trackName.textContent = currentTrack.name;
+                    artistName.textContent = currentTrack.artists[0].name;
+                    albumImage.src = currentTrack.album.images[0].url;
+                    
+                    // Show music player if hidden
+                    musicPlayer.style.display = 'block';
+                    
+                    // Initialize the Spotify player
+                    initializePlayer(accessToken);
+                } else {
+                    alert('No tracks found for this emotion. Try another emotion.');
+                }
+            } catch (error) {
+                console.error('Error fetching music:', error);
+                alert('Error fetching music. Please try again.');
+            }
+            */
+        }
+        
+        // Function to toggle login state
+        function toggleLogin() {
+            if (isLoggedIn) {
+                // Actual logout logic
+                window.location.href = 'https://accounts.spotify.com/en/logout';
+                isLoggedIn = false;
+                // Update UI accordingly
+                loginBtn.innerHTML = '<i class="fab fa-spotify"></i> Login with Spotify';
+                loginBtn.classList.remove('logout-btn');
+                loginBtn.classList.add('login-btn');
+                userInfo.style.display = 'none';
+                musicPlayer.style.display = 'none';
+                playerStatus.textContent = 'Login to play music';
+            } else {
+                // TODO: Replace with your actual client ID and redirect URI
+                // Use environment variables (will be replaced during deployment)
+                const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+                const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI;
+                const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state', 
+                               'user-modify-playback-state', 'streaming'];
+                
+                // Redirect to Spotify authorization
+                const authEndpoint = 'https://accounts.spotify.com/authorize';
+                window.location.href = `${authEndpoint}?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes.join(' '))}&response_type=token`;
+            }
+        }
+        
+        // Check for access token in URL after redirect
+        function checkForAccessToken() {
+            const hash = window.location.hash;
+            if (hash) {
+                const token = hash.substring(1).split('&').find(elem => elem.startsWith('access_token')).split('=')[1];
+                const expiresIn = hash.substring(1).split('&').find(elem => elem.startsWith('expires_in')).split('=')[1];
+                
+                // Store token and expiration
+                localStorage.setItem('spotify_access_token', token);
+                localStorage.setItem('spotify_token_expiry', Date.now() + (expiresIn * 1000));
+                
+                // Clean up URL
+                window.location.hash = '';
+                
+                // Update UI
+                isLoggedIn = true;
+                updateLoginUI();
+                
+                // Get user profile to check if premium
+                getUserProfile(token);
+            }
+        }
+        
+        // Update login UI
+        function updateLoginUI() {
+            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout';
+            loginBtn.classList.remove('login-btn');
+            loginBtn.classList.add('logout-btn');
+            userInfo.style.display = 'block';
+        }
+        
+        // Get user profile to check account type
+        async function getUserProfile(accessToken) {
+            // TODO: Implement actual API call to get user profile
+            // For demo, randomly assign premium status
+            isPremium = Math.random() > 0.5;
+            
+            username.textContent = 'Demo User';
+            userType.textContent = isPremium ? 'Premium Account' : 'Free Account';
+            userType.className = 'user-type ' + (isPremium ? 'premium' : 'free');
+            
+            playerStatus.textContent = isPremium ? 
+                'Logged in with Spotify Premium - Full tracks available' : 
+                'Logged in with Spotify Free - Previews only';
+            
+            /*
+            // Actual implementation:
+            try {
+                const response = await fetch('https://api.spotify.com/v1/me', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                username.textContent = data.display_name;
+                isPremium = data.product === 'premium';
+                
+                userType.textContent = isPremium ? 'Premium Account' : 'Free Account';
+                userType.className = 'user-type ' + (isPremium ? 'premium' : 'free');
+                
+                playerStatus.textContent = isPremium ? 
+                    'Logged in with Spotify Premium - Full tracks available' : 
+                    'Logged in with Spotify Free - Previews only';
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+            */
+        }
+        
+        // Function to toggle play/pause
+        function togglePlay() {
+            if (!currentTrack) {
+                alert('Find some music first!');
+                return;
+            }
+            
+            isPlaying = !isPlaying;
+            
+            const playIcon = playBtn.querySelector('i');
+            if (isPlaying) {
+                playIcon.classList.remove('fa-play');
+                playIcon.classList.add('fa-pause');
+                playerStatus.textContent = isPremium ? 'Playing full track...' : 'Playing preview...';
+            } else {
+                playIcon.classList.remove('fa-pause');
+                playIcon.classList.add('fa-play');
+                playerStatus.textContent = isPremium ? 'Paused - Premium user' : 'Paused - Free user';
+            }
+        }
+        
+        // Function to play previous track
+        function playPrevious() {
+            playerStatus.textContent = 'Playing previous track...';
+            // In a real app, this would change to the previous track
+            setTimeout(() => {
+                playerStatus.textContent = isPremium ? 
+                    'Playing full track...' : 'Playing preview...';
+            }, 1000);
+        }
+        
+        // Function to play next track
+        function playNext() {
+            playerStatus.textContent = 'Playing next track...';
+            // In a real app, this would change to the next track
+            setTimeout(() => {
+                playerStatus.textContent = isPremium ? 
+                    'Playing full track...' : 'Playing preview...';
+            }, 1000);
+        }
+        
+        // Initialize the app with some demo values
+        emotionInput.value = 'happy';
+    </script>
+</body>
+</html>
